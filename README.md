@@ -1,2 +1,2 @@
 # iargultaSSH
-various remote commands run over SSH
+various shell scripts and snippets I've used at one time or another...
