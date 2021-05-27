@@ -1,2 +1,2 @@
-# iargultaSSH
+# Warybyte Shellscripts
 various shell scripts and snippets I've used at one time or another...
