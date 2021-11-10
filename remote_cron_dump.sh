@@ -1,7 +1,12 @@
 #!/bin/bash
-report=server_cron_report_name.txt
-for servers in $(echo SERVER_ARRAY{1..4}.DOMAIN); 
+report=shib_cron_report.txt; 
+for servers in $(echo $1); 
 do 
-  echo $servers >> $report; 
-  ssh $servers 'for users in $(ls /home/); do echo "$users: $(sudo crontab -l -u $users > /dev/null 2>&1 && sudo crontab -l -u $users)"; done' >> $report; 
+	echo $servers >> $report; 
+	ssh -t $servers '
+	for users in $(cut -d ":" -f1 /etc/passwd); 
+	do 
+		echo "$users: $(sudo crontab -l -u $users > /dev/null 2>&1 && sudo crontab -l -u $users)"; 
+	done
+       ' >> $report; 
 done
