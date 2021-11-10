@@ -1,5 +1,5 @@
 #!/bin/bash
-report=shib_cron_report.txt; 
+report=<YOUR_LOCAL_REPORT>; 
 for servers in $(echo $1); 
 do 
 	echo $servers >> $report; 
