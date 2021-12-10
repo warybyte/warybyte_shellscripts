@@ -10,7 +10,7 @@ do
 	
   echo $WEBENV; # this is more debugging than anything so I know where I am within the loops... 
   
-	for WEBBAL in $(grep BalancerMember $j | awk -F '/' '{print $3}' | awk -F ' ' '{print $1}' | sort -u); 
+	for WEBBAL in $(grep BalancerMember $WEBENV | awk -F '/' '{print $3}' | awk -F ' ' '{print $1}' | sort -u); 
 	do
 		# Uses netcat to test the connection between proxy and remote webapp, printing the results. Note: I'm not error handling here.
 		# <WEBAPP>:<PORT> <STATUS>. 0 means good connection. 1 means failed connection. 
