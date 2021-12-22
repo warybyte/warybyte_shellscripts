@@ -1,0 +1,20 @@
+###
+# Location: /usr/lib/systemd/system/ispy.service
+# Primary Source: https://blog.container-solutions.com/running-docker-containers-with-systemd
+# Description: This is a systemd unit I created to build my iSpy agentDVR docker like a service.
+###
+[Unit]
+Description=Fire iSpy Container
+After=docker.service
+Requires=docker.service
+
+[Service]
+TimeoutStartSec=0
+Restart=always
+ExecStartPre=-/usr/bin/docker stop agentdvr
+ExecStartPre=-/usr/bin/docker rm agentdvr
+ExecStart=/usr/bin/docker run -p 8090:8090 -p 3478:3478/udp -p 50000-50010:50000-50010/udp -v /appdata/ispyagentdvr/config/:/agent/Media/XML/ -v /appdata/ispyagentdvr/media/:/agent/Media/WebServerRoot/Media/ -v /appdata/ispyagentdvr/commands:/agent/Commands/ -e TZ=America/New_York --name agentdvr doitandbedone/ispyagentdvr
+ExecStop=/usr/bin/docker stop agentdvr
+
+[Install]
+WantedBy=multi-user.target
