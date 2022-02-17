@@ -19,12 +19,18 @@
 # - SSH connection via shared keys
 
 # -----------------------------------------
+# set vars
+# note: these are used throughout...
+# -----------------------------------------
+VMPRIME=$(virsh list --state-shutoff --name)
+VMHOSTNAME="<INSERT YOUR VM IP/FQDN";
+VPNTARGET="<INSERT YOUR VPN TARGET>";
+VPNGROUP="<INSERT YOUR VPN GROUP>";
+
+# -----------------------------------------
 # boot VM
 # note: gnome-boxes is assumed
 # -----------------------------------------
-VMPRIME=$(virsh list --state-shutoff --name)
-VMHOSTNAME=NNN.NNN.NNN.HHH
-VMFILEPATH=/home/user/vmdump
 virsh start $VMPRIME
 statu=0; 
 remu=20;  
@@ -52,19 +58,20 @@ sleep 3;
 # note: this has to be set before the VPN
 # ----------------------------------------
 echo "Opening second terminal for SSH connection...";
-sleep 4;
+sleep 3;
 gnome-terminal --tab -- ssh $VMHOSTNAME;
 
 # ----------------------------------------
 # mount share
 # note: sudo because you are mounting an FS. 
 # ----------------------------------------
-echo "Mounting shared drive.";
+echo "Mounting shared drive...";
 echo "Please enter your local workstation password..."
-sudo sshfs -o allow_other,default_permissions,IdentityFile=/home/user/.ssh/id_rsa tron@$VMHOSTNAME:./vmdump/ $VMFILEPATH;
+sleep 3;
+sudo sshfs -o allow_other,default_permissions,IdentityFile=/home/$USERNAME/.ssh/id_rsa $USERNAME@$VMHOSTNAME:./vmdump/ /home/$USERNAME/vmdump;
 echo "Mounting complete...";
 df -h | grep vmdump;
-sleep 4;
+sleep 3;
 
 # ----------------------------------------
 # connect VPN
@@ -73,7 +80,7 @@ sleep 4;
 # ----------------------------------------
 echo "Connecting to VPN on VM. Please follow directions...";
 sleep 3;
-ssh -t $VMHOSTNAME '/opt/cisco/anyconnect/bin/vpn connect <INSERT_YOUR_VPN/INSERT_YOUR_VPN_GROUP>';
+ssh -t $VMHOSTNAME "/opt/cisco/anyconnect/bin/vpn connect $VPNTARGET/$VPNGROUP";
 echo "VM setup completed. Please change tabs to access.";
 echo "Goodbye!"
 echo "
