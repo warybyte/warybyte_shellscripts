@@ -74,6 +74,16 @@ df -h | grep vmdump;
 sleep 3;
 
 # ----------------------------------------
+# Setup SOCKS5 connection
+# note: this is to proxy VPN web connections to my workstation
+# ----------------------------------------
+echo "Setting up SOCKS5 Proxy to fork in background.";
+echo "Use localhost:8787";
+sleep 3;
+ssh -D 8787 -q -C -N -f $USERNAME@$VMHOSTNAME
+
+
+# ----------------------------------------
 # connect VPN
 # note: -t flag is necessary for setup to 
 # avoid typing password in plain text
