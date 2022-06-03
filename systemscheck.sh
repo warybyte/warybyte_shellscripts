@@ -131,7 +131,7 @@ echo;
 echo "-------------------------------";
 echo "-----  JAVA APP Testing -----";
 echo "-------------------------------";
-result=$(ssh $SHIBSYS 'ps -efl | grep java | grep -v grep | grep shibuser | wc -l');
+result=$(ssh $JAVASYS 'ps -efl | grep java | grep -v grep | grep javauser | wc -l');
 if [[ $result -eq 1 ]]
 then
 	printf "${BLUE}<TEST>${NC},$targetsys,${GREEN}UP${NC}\n";
@@ -172,7 +172,6 @@ for targetsys in $(echo $QUALSYSPROXY $DEVLSYSPROXY $PRODSYSPROXY)
       targetproc=httpd;
       remstat=$(ssh $targetsys "systemctl list-units --type=service --state=running | grep $targetproc");
       sysstat=$(echo $remstat | awk -F '.' '{print $1}');
-      # PROD IEM proxy names the httpd service differently...
       if [[ "$sysstat" == "$targetproc" || "$sysstat" == httpd24-httpd ]]
       then
          printf "${BLUE}$targetsys${NC},$sysstat,${GREEN}UP${NC}\n";
@@ -215,7 +214,7 @@ sort -o $REPORT sortme.csv;
 rm sortme.csv;
 
 echo "Report $REPORT has been created/edited";
-for APPNAME in $(echo $BANAPPROSTER)
+for APPNAME in $(echo $STUDENTSERVICE)
 do
     PRODCOUNT=$(grep $APPNAME $REPORT | grep prd | wc -l);
     QUALCOUNT=$(grep $APPNAME $REPORT | grep qa | wc -l);
@@ -336,9 +335,9 @@ do
                        nc -z $WEBAPP $WEBPRT 2>/dev/null;
                        if [[ $? -eq 0 ]]
                        then
-                               printf "${BLUE}$(echo $WEBENV | rev | awk -F "/" "{print \$1}" | rev | sed s/.<TEST.conf//g)${NC},$WEBBAL,$PROXYSYS,${GREEN}UP${NC}\n";
+                               printf "${BLUE}$(echo $WEBENV | rev | awk -F "/" "{print \$1}" | rev | sed s/.TEST.conf//g)${NC},$WEBBAL,$PROXYSYS,${GREEN}UP${NC}\n";
                        else
-                               printf "${BLUE}$(echo $WEBENV | rev | awk -F "/" "{print \$1}" | rev | sed s/.<TEST>.conf//g)${NC},$WEBBAL,$PROXYSYS,${RED}DOWN${NC}\n";
+                               printf "${BLUE}$(echo $WEBENV | rev | awk -F "/" "{print \$1}" | rev | sed s/.TEST.conf//g)${NC},$WEBBAL,$PROXYSYS,${RED}DOWN${NC}\n";
                        fi
                done;
      done;
